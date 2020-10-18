@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+//components
+import InputField from "./Components/InputField";
+import Feedback from "./Components/Feedback";
+import Character from "./Components/Character";
+
+//css files"
+import "./App.css";
+
+const App = () => {
+  //states
+  const [textToProcess, settextToProcess] = useState("");
+
+  //methods
+  const handleChangeString = (event) => {
+    settextToProcess(event.target.value);
+  };
+
+  const handleRemoveChar = (charIndex) => {
+    console.log("hello");
+    let tempText = textToProcess.split("");
+    tempText.splice(charIndex, 1);
+    settextToProcess(tempText.join(""));
+  };
+
+  //components
+  let validationMessage =
+    textToProcess.length < 5 ? "Text too short" : "Text long enough"; //validation mesage based on the input string
+
+  let charList = textToProcess.split("").map((char, index) => {
+    //rendering each caracters of the input string into character component
+    return (
+      <Character
+        char={char}
+        key={index}
+        handleRemoveChar={() => handleRemoveChar(index)}
+      />
+    );
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <InputField
+        textToProcess={textToProcess}
+        handleChangeString={handleChangeString}
+      />
+      <Feedback>{validationMessage}</Feedback>
+      {charList}
     </div>
   );
-}
+};
 
 export default App;
